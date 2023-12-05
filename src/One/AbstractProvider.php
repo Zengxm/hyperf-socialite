@@ -1,16 +1,24 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\One;
 
-
+use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
-use Hyperf\Utils\ApplicationContext;
 use League\OAuth1\Client\Credentials\TokenCredentials;
 use League\OAuth1\Client\Server\Server;
 use OnixSystemsPHP\HyperfSocialite\Contracts\Provider as ProviderContract;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
+
+use function Hyperf\Support\make;
 
 abstract class AbstractProvider implements ProviderContract
 {
@@ -33,10 +41,6 @@ abstract class AbstractProvider implements ProviderContract
 
     /**
      * Create a new provider instance.
-     *
-     * @param  \Hyperf\HttpServer\Contract\RequestInterface  $request
-     * @param  \League\OAuth1\Client\Server\Server  $server
-     * @return void
      */
     public function __construct(RequestInterface $request, Server $server)
     {
@@ -47,13 +51,12 @@ abstract class AbstractProvider implements ProviderContract
 
     /**
      * Redirect the user to the authentication page for the provider.
-     *
-     * @return \Psr\Http\Message\ResponseInterface
      */
     public function redirect(): PsrResponseInterface
     {
         $this->session->put(
-            'oauth.temp', $temp = $this->server->getTemporaryCredentials()
+            'oauth.temp',
+            $temp = $this->server->getTemporaryCredentials()
         );
 
         $response = make(ResponseInterface::class);
@@ -63,9 +66,7 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get the User instance for the authenticated user.
      *
-     * @return \OnixSystemsPHP\HyperfSocialite\One\User
-     *
-     * @throws \OnixSystemsPHP\HyperfSocialite\One\MissingVerifierException
+     * @throws MissingVerifierException
      */
     public function user(): User
     {
@@ -76,11 +77,12 @@ abstract class AbstractProvider implements ProviderContract
         $token = $this->getToken();
 
         $user = $this->server->getUserDetails(
-            $token, $this->shouldBypassCache($token->getIdentifier(), $token->getSecret())
+            $token,
+            $this->shouldBypassCache($token->getIdentifier(), $token->getSecret())
         );
 
-        $instance = (new User)->setRaw($user->extra)
-                ->setToken($token->getIdentifier(), $token->getSecret());
+        $instance = (new User())->setRaw($user->extra)
+            ->setToken($token->getIdentifier(), $token->getSecret());
 
         return $instance->map([
             'id' => $user->uid,
@@ -94,9 +96,8 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get a Social User instance from a known access token and secret.
      *
-     * @param  string  $token
-     * @param  string  $secret
-     * @return \OnixSystemsPHP\HyperfSocialite\One\User
+     * @param string $token
+     * @param string $secret
      */
     public function userFromTokenAndSecret($token, $secret): User
     {
@@ -106,10 +107,11 @@ abstract class AbstractProvider implements ProviderContract
         $tokenCredentials->setSecret($secret);
 
         $user = $this->server->getUserDetails(
-            $tokenCredentials, $this->shouldBypassCache($token, $secret)
+            $tokenCredentials,
+            $this->shouldBypassCache($token, $secret)
         );
 
-        $instance = (new User)->setRaw($user->extra)
+        $instance = (new User())->setRaw($user->extra)
             ->setToken($tokenCredentials->getIdentifier(), $tokenCredentials->getSecret());
 
         return $instance->map([
@@ -122,9 +124,19 @@ abstract class AbstractProvider implements ProviderContract
     }
 
     /**
-     * Get the token credentials for the request.
+     * Set the request instance.
      *
-     * @return \League\OAuth1\Client\Credentials\TokenCredentials
+     * @return $this
+     */
+    public function setRequest(RequestInterface $request): self
+    {
+        $this->request = $request;
+
+        return $this;
+    }
+
+    /**
+     * Get the token credentials for the request.
      */
     protected function getToken(): TokenCredentials
     {
@@ -135,14 +147,14 @@ abstract class AbstractProvider implements ProviderContract
         }
 
         return $this->server->getTokenCredentials(
-            $temp, $this->request->get('oauth_token'), $this->request->get('oauth_verifier')
+            $temp,
+            $this->request->get('oauth_token'),
+            $this->request->get('oauth_verifier')
         );
     }
 
     /**
      * Determine if the request has the necessary OAuth verifier.
-     *
-     * @return bool
      */
     protected function hasNecessaryVerifier(): bool
     {
@@ -151,14 +163,10 @@ abstract class AbstractProvider implements ProviderContract
 
     /**
      * Determine if the user information cache should be bypassed.
-     *
-     * @param  string  $token
-     * @param  string  $secret
-     * @return bool
      */
     protected function shouldBypassCache(string $token, string $secret): bool
     {
-        $newHash = sha1($token.'_'.$secret);
+        $newHash = sha1($token . '_' . $secret);
 
         if (! empty($this->userHash) && $newHash !== $this->userHash) {
             $this->userHash = $newHash;
@@ -169,18 +177,5 @@ abstract class AbstractProvider implements ProviderContract
         $this->userHash = $this->userHash ?: $newHash;
 
         return false;
-    }
-
-    /**
-     * Set the request instance.
-     *
-     * @param  \Hyperf\HttpServer\Contract\RequestInterface $request
-     * @return $this
-     */
-    public function setRequest(RequestInterface $request): self
-    {
-        $this->request = $request;
-
-        return $this;
     }
 }

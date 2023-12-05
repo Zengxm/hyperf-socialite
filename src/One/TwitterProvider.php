@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\One;
 
 class TwitterProvider extends AbstractProvider
 {
-    /**
-     * {@inheritdoc}
-     */
     public function user(): User
     {
         if (! $this->hasNecessaryVerifier()) {
@@ -20,8 +24,8 @@ class TwitterProvider extends AbstractProvider
             'description' => $user->description,
         ];
 
-        $instance = (new User)->setRaw(array_merge($user->extra, $user->urls, $extraDetails))
-                ->setToken($token->getIdentifier(), $token->getSecret());
+        $instance = (new User())->setRaw(array_merge($user->extra, $user->urls, $extraDetails))
+            ->setToken($token->getIdentifier(), $token->getSecret());
 
         return $instance->map([
             'id' => $user->uid,

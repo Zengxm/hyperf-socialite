@@ -1,11 +1,17 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\Tests\Fixtures;
 
+use Mockery as m;
 use OnixSystemsPHP\HyperfSocialite\Two\AbstractProvider;
 use OnixSystemsPHP\HyperfSocialite\Two\User;
-use Mockery as m;
-use stdClass;
 
 class OAuthTwoTestProviderStub extends AbstractProvider
 {
@@ -14,7 +20,7 @@ class OAuthTwoTestProviderStub extends AbstractProvider
      */
     public $http;
 
-    protected function getAuthUrl(string $state): string
+    protected function getAuthUrl(null|string $state): string
     {
         return $this->buildAuthUrlFromBase('http://auth.url', $state);
     }
@@ -31,7 +37,7 @@ class OAuthTwoTestProviderStub extends AbstractProvider
 
     protected function mapUserToObject(array $user): User
     {
-        return (new User)->map(['id' => $user['id']]);
+        return (new User())->map(['id' => $user['id']]);
     }
 
     /**
@@ -45,6 +51,6 @@ class OAuthTwoTestProviderStub extends AbstractProvider
             return $this->http;
         }
 
-        return $this->http = m::mock(stdClass::class);
+        return $this->http = m::mock(\stdClass::class);
     }
 }

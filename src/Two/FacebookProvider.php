@@ -1,79 +1,53 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\Two;
 
-use Hyperf\Utils\Arr;
+use Hyperf\Collection\Arr;
 
 class FacebookProvider extends AbstractProvider implements ProviderInterface
 {
     /**
      * The base Facebook Graph URL.
-     *
-     * @var string
      */
     protected string $graphUrl = 'https://graph.facebook.com';
 
     /**
      * The Graph API version for the request.
-     *
-     * @var string
      */
     protected string $version = 'v3.3';
 
     /**
      * The user fields being requested.
-     *
-     * @var array
      */
     protected array $fields = ['name', 'email', 'gender', 'verified', 'link'];
 
     /**
      * The scopes being requested.
-     *
-     * @var array
      */
     protected array $scopes = ['email'];
 
     /**
      * Display the dialog in a popup view.
-     *
-     * @var bool
      */
     protected bool $popup = false;
 
     /**
      * Re-request a declined permission.
-     *
-     * @var bool
      */
     protected bool $reRequest = false;
 
     /**
      * The access token that was last used to retrieve a user.
-     *
-     * @var string|null
      */
     protected ?string $lastToken;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getAuthUrl(?string $state): string
-    {
-        return $this->buildAuthUrlFromBase('https://www.facebook.com/'.$this->version.'/dialog/oauth', $state);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getTokenUrl(): string
-    {
-        return $this->graphUrl.'/'.$this->version.'/oauth/access_token';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getAccessTokenResponse(string $code): array
     {
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
@@ -86,69 +60,8 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getUserByToken(string $token): array
-    {
-        $this->lastToken = $token;
-
-        $meUrl = $this->graphUrl.'/'.$this->version.'/me?access_token='.$token.'&fields='.implode(',', $this->fields);
-
-        if (! empty($this->clientSecret)) {
-            $appSecretProof = hash_hmac('sha256', $token, $this->clientSecret);
-
-            $meUrl .= '&appsecret_proof='.$appSecretProof;
-        }
-
-        $response = $this->getHttpClient()->get($meUrl, [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
-
-        return json_decode($response->getBody(), true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function mapUserToObject(array $user): User
-    {
-        $avatarUrl = $this->graphUrl.'/'.$this->version.'/'.$user['id'].'/picture';
-
-        return (new User)->setRaw($user)->map([
-            'id' => (string) $user['id'],
-            'nickname' => null,
-            'name' => $user['name'] ?? null,
-            'email' => $user['email'] ?? null,
-            'avatar' => $avatarUrl.'?type=normal',
-            'avatar_original' => $avatarUrl.'?width=1920',
-            'profileUrl' => $user['link'] ?? null,
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getCodeFields(?string $state = null): array
-    {
-        $fields = parent::getCodeFields($state);
-
-        if ($this->popup) {
-            $fields['display'] = 'popup';
-        }
-
-        if ($this->reRequest) {
-            $fields['auth_type'] = 'rerequest';
-        }
-
-        return $fields;
-    }
-
-    /**
      * Set the user fields to request from Facebook.
      *
-     * @param  array  $fields
      * @return $this
      */
     public function fields(array $fields): self
@@ -184,8 +97,6 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
 
     /**
      * Get the last access token used.
-     *
-     * @return string|null
      */
     public function lastToken(): ?string
     {
@@ -195,7 +106,6 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * Specify which graph version should be used.
      *
-     * @param  string $version
      * @return $this
      */
     public function usingGraphVersion(string $version): self
@@ -203,5 +113,66 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
         $this->version = $version;
 
         return $this;
+    }
+
+    protected function getAuthUrl(?string $state): string
+    {
+        return $this->buildAuthUrlFromBase('https://www.facebook.com/' . $this->version . '/dialog/oauth', $state);
+    }
+
+    protected function getTokenUrl(): string
+    {
+        return $this->graphUrl . '/' . $this->version . '/oauth/access_token';
+    }
+
+    protected function getUserByToken(string $token): array
+    {
+        $this->lastToken = $token;
+
+        $meUrl = $this->graphUrl . '/' . $this->version . '/me?access_token=' . $token . '&fields=' . implode(',', $this->fields);
+
+        if (! empty($this->clientSecret)) {
+            $appSecretProof = hash_hmac('sha256', $token, $this->clientSecret);
+
+            $meUrl .= '&appsecret_proof=' . $appSecretProof;
+        }
+
+        $response = $this->getHttpClient()->get($meUrl, [
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        return json_decode($response->getBody(), true);
+    }
+
+    protected function mapUserToObject(array $user): User
+    {
+        $avatarUrl = $this->graphUrl . '/' . $this->version . '/' . $user['id'] . '/picture';
+
+        return (new User())->setRaw($user)->map([
+            'id' => (string) $user['id'],
+            'nickname' => null,
+            'name' => $user['name'] ?? null,
+            'email' => $user['email'] ?? null,
+            'avatar' => $avatarUrl . '?type=normal',
+            'avatar_original' => $avatarUrl . '?width=1920',
+            'profileUrl' => $user['link'] ?? null,
+        ]);
+    }
+
+    protected function getCodeFields(?string $state = null): array
+    {
+        $fields = parent::getCodeFields($state);
+
+        if ($this->popup) {
+            $fields['display'] = 'popup';
+        }
+
+        if ($this->reRequest) {
+            $fields['auth_type'] = 'rerequest';
+        }
+
+        return $fields;
     }
 }

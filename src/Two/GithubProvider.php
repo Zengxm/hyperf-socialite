@@ -1,44 +1,40 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\Two;
 
-use Exception;
-use Hyperf\Utils\Arr;
+use Hyperf\Collection\Arr;
 
 class GithubProvider extends AbstractProvider implements ProviderInterface
 {
     /**
      * The scopes being requested.
-     *
-     * @var array
      */
     protected array $scopes = ['user:email'];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getAuthUrl(?string $state):string
+    protected function getAuthUrl(?string $state): string
     {
         return $this->buildAuthUrlFromBase('https://github.com/login/oauth/authorize', $state);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getTokenUrl(): string
     {
         return 'https://github.com/login/oauth/access_token';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getUserByToken(string $token): array
     {
         $userUrl = 'https://api.github.com/user';
 
         $response = $this->getHttpClient()->get(
-            $userUrl, $this->getRequestOptions($token)
+            $userUrl,
+            $this->getRequestOptions($token)
         );
 
         $user = json_decode($response->getBody(), true);
@@ -52,9 +48,6 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
 
     /**
      * Get the email for the given access token.
-     *
-     * @param  string  $token
-     * @return string|null
      */
     protected function getEmailByToken(string $token): ?string
     {
@@ -62,9 +55,10 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
 
         try {
             $response = $this->getHttpClient()->get(
-                $emailsUrl, $this->getRequestOptions($token)
+                $emailsUrl,
+                $this->getRequestOptions($token)
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return null;
         }
 
@@ -76,12 +70,9 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function mapUserToObject(array $user): User
     {
-        return (new User)->setRaw($user)->map([
+        return (new User())->setRaw($user)->map([
             'id' => (string) $user['id'],
             'nickname' => $user['login'],
             'name' => Arr::get($user, 'name'),
@@ -92,16 +83,13 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
 
     /**
      * Get the default options for an HTTP request.
-     *
-     * @param string $token
-     * @return array
      */
     protected function getRequestOptions(string $token): array
     {
         return [
             'headers' => [
                 'Accept' => 'application/vnd.github.v3+json',
-                'Authorization' => 'token '.$token,
+                'Authorization' => 'token ' . $token,
             ],
         ];
     }

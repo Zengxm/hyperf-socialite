@@ -1,6 +1,12 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite;
 
 use OnixSystemsPHP\HyperfSocialite\Contracts\User;
@@ -16,43 +22,31 @@ abstract class AbstractUser implements \ArrayAccess, User
 
     /**
      * The user's nickname / username.
-     *
-     * @var string|null
      */
     public ?string $nickname;
 
     /**
      * The user's full name.
-     *
-     * @var string|null
      */
     public ?string $name;
 
     /**
      * The user's e-mail address.
-     *
-     * @var string|null
      */
     public ?string $email;
 
     /**
      * The user's avatar image URL.
-     *
-     * @var string|null
      */
     public ?string $avatar;
 
     /**
      * The user's raw attributes.
-     *
-     * @var array
      */
     public array $user;
 
     /**
      * Get the unique identifier for the user.
-     *
-     * @return string
      */
     public function getId(): string
     {
@@ -61,8 +55,6 @@ abstract class AbstractUser implements \ArrayAccess, User
 
     /**
      * Get the nickname / username for the user.
-     *
-     * @return string
      */
     public function getNickname(): string
     {
@@ -71,8 +63,6 @@ abstract class AbstractUser implements \ArrayAccess, User
 
     /**
      * Get the full name of the user.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -81,8 +71,6 @@ abstract class AbstractUser implements \ArrayAccess, User
 
     /**
      * Get the e-mail address of the user.
-     *
-     * @return string
      */
     public function getEmail(): string
     {
@@ -91,8 +79,6 @@ abstract class AbstractUser implements \ArrayAccess, User
 
     /**
      * Get the avatar / image URL for the user.
-     *
-     * @return string
      */
     public function getAvatar(): string
     {
@@ -101,8 +87,6 @@ abstract class AbstractUser implements \ArrayAccess, User
 
     /**
      * Get the raw user array.
-     *
-     * @return array
      */
     public function getRaw(): array
     {
@@ -139,7 +123,6 @@ abstract class AbstractUser implements \ArrayAccess, User
      * Determine if the given raw user attribute exists.
      *
      * @param string $offset
-     * @return bool
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -150,7 +133,6 @@ abstract class AbstractUser implements \ArrayAccess, User
      * Get the given key from the raw user.
      *
      * @param string $offset
-     * @return mixed
      */
     public function offsetGet(mixed $offset): mixed
     {
@@ -161,7 +143,6 @@ abstract class AbstractUser implements \ArrayAccess, User
      * Set the given attribute on the raw user array.
      *
      * @param string $offset
-     * @param mixed $value
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {

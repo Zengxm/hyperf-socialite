@@ -1,18 +1,30 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\Tests;
 
+use Mockery as m;
 use OnixSystemsPHP\HyperfSocialite\Tests\Fixtures\FacebookTestProviderStub;
 use OnixSystemsPHP\HyperfSocialite\Tests\Fixtures\OAuthTwoTestProviderStub;
 use OnixSystemsPHP\HyperfSocialite\Tests\Fixtures\OAuthTwoWithPKCETestProviderStub;
 use OnixSystemsPHP\HyperfSocialite\Two\InvalidStateException;
 use OnixSystemsPHP\HyperfSocialite\Two\User;
-use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class OAuthTwoTest extends TestCase
 {
+    private static $codeVerifier;
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -42,10 +54,8 @@ class OAuthTwoTest extends TestCase
 
         $this->assertInstanceOf(SymfonyRedirectResponse::class, $response);
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('http://auth.url?client_id=client_id&redirect_uri=redirect&scope=&response_type=code&state='.$state, $response->getTargetUrl());
+        $this->assertSame('http://auth.url?client_id=client_id&redirect_uri=redirect&scope=&response_type=code&state=' . $state, $response->getTargetUrl());
     }
-
-    private static $codeVerifier = null;
 
     public function testRedirectGeneratesTheProperIlluminateRedirectResponseWithPKCE()
     {
@@ -58,7 +68,8 @@ class OAuthTwoTest extends TestCase
                 $state = $value;
 
                 return true;
-            } elseif ($name === 'code_verifier') {
+            }
+            if ($name === 'code_verifier') {
                 self::$codeVerifier = $value;
 
                 return true;
@@ -83,7 +94,7 @@ class OAuthTwoTest extends TestCase
 
         $this->assertInstanceOf(SymfonyRedirectResponse::class, $response);
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('http://auth.url?client_id=client_id&redirect_uri=redirect&scope=&response_type=code&state='.$state.'&code_challenge='.$codeChallenge.'&code_challenge_method=S256', $response->getTargetUrl());
+        $this->assertSame('http://auth.url?client_id=client_id&redirect_uri=redirect&scope=&response_type=code&state=' . $state . '&code_challenge=' . $codeChallenge . '&code_challenge_method=S256', $response->getTargetUrl());
     }
 
     public function testTokenRequestIncludesPKCECodeVerifier()
@@ -94,10 +105,10 @@ class OAuthTwoTest extends TestCase
         $session->shouldReceive('pull')->once()->with('state')->andReturn(str_repeat('A', 40));
         $session->shouldReceive('pull')->once()->with('code_verifier')->andReturn($codeVerifier);
         $provider = new OAuthTwoWithPKCETestProviderStub($request, 'client_id', 'client_secret', 'redirect_uri');
-        $provider->http = m::mock(stdClass::class);
+        $provider->http = m::mock(\stdClass::class);
         $provider->http->shouldReceive('post')->once()->with('http://token.url', [
             'headers' => ['Accept' => 'application/json'], 'form_params' => ['grant_type' => 'authorization_code', 'client_id' => 'client_id', 'client_secret' => 'client_secret', 'code' => 'code', 'redirect_uri' => 'redirect_uri', 'code_verifier' => $codeVerifier],
-        ])->andReturn($response = m::mock(stdClass::class));
+        ])->andReturn($response = m::mock(\stdClass::class));
         $response->shouldReceive('getBody')->once()->andReturn('{ "access_token" : "access_token", "refresh_token" : "refresh_token", "expires_in" : 3600 }');
         $user = $provider->user();
 
@@ -115,10 +126,10 @@ class OAuthTwoTest extends TestCase
         $request->setLaravelSession($session = m::mock(Session::class));
         $session->shouldReceive('pull')->once()->with('state')->andReturn(str_repeat('A', 40));
         $provider = new OAuthTwoTestProviderStub($request, 'client_id', 'client_secret', 'redirect_uri');
-        $provider->http = m::mock(stdClass::class);
+        $provider->http = m::mock(\stdClass::class);
         $provider->http->shouldReceive('post')->once()->with('http://token.url', [
             'headers' => ['Accept' => 'application/json'], 'form_params' => ['grant_type' => 'authorization_code', 'client_id' => 'client_id', 'client_secret' => 'client_secret', 'code' => 'code', 'redirect_uri' => 'redirect_uri'],
-        ])->andReturn($response = m::mock(stdClass::class));
+        ])->andReturn($response = m::mock(\stdClass::class));
         $response->shouldReceive('getBody')->once()->andReturn('{ "access_token" : "access_token", "refresh_token" : "refresh_token", "expires_in" : 3600 }');
         $user = $provider->user();
 
@@ -136,10 +147,10 @@ class OAuthTwoTest extends TestCase
         $request->setSession($session = m::mock(SessionInterface::class));
         $session->shouldReceive('pull')->once()->with('state')->andReturn(str_repeat('A', 40));
         $provider = new FacebookTestProviderStub($request, 'client_id', 'client_secret', 'redirect_uri');
-        $provider->http = m::mock(stdClass::class);
+        $provider->http = m::mock(\stdClass::class);
         $provider->http->shouldReceive('post')->once()->with('https://graph.facebook.com/v3.3/oauth/access_token', [
             'form_params' => ['grant_type' => 'authorization_code', 'client_id' => 'client_id', 'client_secret' => 'client_secret', 'code' => 'code', 'redirect_uri' => 'redirect_uri'],
-        ])->andReturn($response = m::mock(stdClass::class));
+        ])->andReturn($response = m::mock(\stdClass::class));
         $response->shouldReceive('getBody')->once()->andReturn(json_encode(['access_token' => 'access_token', 'expires' => 5183085]));
         $user = $provider->user();
 

@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\Two;
 
 use OnixSystemsPHP\HyperfSocialite\AbstractUser;
@@ -24,7 +31,6 @@ class User extends AbstractUser
     /**
      * Set the token on the user.
      *
-     * @param  string $token
      * @return $this
      */
     public function setToken(string $token): self
@@ -37,7 +43,6 @@ class User extends AbstractUser
     /**
      * Set the refresh token required to obtain a new access token.
      *
-     * @param  string|null  $refreshToken
      * @return $this
      */
     public function setRefreshToken(?string $refreshToken): self
@@ -50,7 +55,6 @@ class User extends AbstractUser
     /**
      * Set the number of seconds the access token is valid for.
      *
-     * @param  int|null $expiresIn
      * @return $this
      */
     public function setExpiresIn(?int $expiresIn): self

@@ -1,10 +1,16 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\Tests\Fixtures;
 
-use OnixSystemsPHP\HyperfSocialite\Two\FacebookProvider;
 use Mockery as m;
-use stdClass;
+use OnixSystemsPHP\HyperfSocialite\Two\FacebookProvider;
 
 class FacebookTestProviderStub extends FacebookProvider
 {
@@ -29,6 +35,6 @@ class FacebookTestProviderStub extends FacebookProvider
             return $this->http;
         }
 
-        return $this->http = m::mock(stdClass::class);
+        return $this->http = m::mock(\stdClass::class);
     }
 }

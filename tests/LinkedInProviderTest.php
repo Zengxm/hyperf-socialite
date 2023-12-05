@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of the extension library for Hyperf.
+ *
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace OnixSystemsPHP\HyperfSocialite\Tests;
 
 use GuzzleHttp\Client;
@@ -10,6 +17,10 @@ use OnixSystemsPHP\HyperfSocialite\Two\User;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class LinkedInProviderTest extends TestCase
 {
     protected function tearDown(): void
@@ -19,7 +30,7 @@ class LinkedInProviderTest extends TestCase
         m::close();
     }
 
-    public function test_it_can_map_a_user_without_an_email_address()
+    public function testItCanMapAUserWithoutAnEmailAddress()
     {
         $request = m::mock(RequestInterface::class);
         $request->shouldReceive('input')->with('code')->andReturn('fake-code');
