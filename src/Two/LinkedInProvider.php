@@ -55,7 +55,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
             ],
         ]);
 
-        return (array) json_decode($response->getBody(), true);
+        return (array) json_decode((string) $response->getBody(), true);
     }
 
     /**
@@ -72,7 +72,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
             ],
         ]);
 
-        return (array) Arr::get((array) json_decode($response->getBody(), true), 'elements.0.handle~');
+        return (array) Arr::get((array) json_decode((string) $response->getBody(), true), 'elements.0.handle~');
     }
 
     protected function mapUserToObject(array $user): User

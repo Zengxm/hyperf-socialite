@@ -34,7 +34,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
             'form_params' => $this->getTokenFields($code),
         ]);
 
-        return json_decode($response->getBody(), true)['access_token'];
+        return json_decode((string) $response->getBody(), true)['access_token'];
     }
 
     protected function getAuthUrl(?string $state): string
@@ -53,7 +53,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
 
         $response = $this->getHttpClient()->get($userUrl);
 
-        $user = json_decode($response->getBody(), true);
+        $user = json_decode((string) $response->getBody(), true);
 
         if (in_array('email', $this->scopes)) {
             $user['email'] = $this->getEmailByToken($token);
@@ -75,7 +75,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
             return null;
         }
 
-        $emails = json_decode($response->getBody(), true);
+        $emails = json_decode((string) $response->getBody(), true);
 
         foreach ($emails['values'] as $email) {
             if ($email['type'] == 'email' && $email['is_primary'] && $email['is_confirmed']) {
