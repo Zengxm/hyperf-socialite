@@ -14,6 +14,7 @@ use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Stringable\Str;
 use League\OAuth1\Client\Server\Twitter as TwitterServer;
 use OnixSystemsPHP\HyperfSocialite\One\TwitterProvider;
+use OnixSystemsPHP\HyperfSocialite\Two\AppleProvider;
 use OnixSystemsPHP\HyperfSocialite\Two\BitbucketProvider;
 use OnixSystemsPHP\HyperfSocialite\Two\FacebookProvider;
 use OnixSystemsPHP\HyperfSocialite\Two\GithubProvider;
@@ -102,6 +103,19 @@ class SocialiteManager extends Manager implements Contracts\Factory
 
         return $this->buildProvider(
             GoogleProvider::class,
+            $config
+        );
+    }
+
+    /**
+     * Create an instance of the specified driver.
+     */
+    protected function createAppleDriver(): Two\AppleProvider
+    {
+        $config = $this->config->get('socialite.apple');
+
+        return $this->buildProvider(
+            AppleProvider::class,
             $config
         );
     }
