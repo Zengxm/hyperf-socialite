@@ -89,7 +89,7 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
         $kid = $token->headers()->get('kid');
 
         if (isset($publicKeys[$kid])) {
-            $publicKey = openssl_pkey_get_details($publicKeys[$kid]);
+            $publicKey = openssl_pkey_get_details($publicKeys[$kid]->getKeyMaterial());
             $constraints = [
                 new SignedWith(new Sha256(), InMemory::plainText($publicKey['key'])),
                 new IssuedBy(self::URL),
@@ -138,6 +138,16 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
         return $user->setToken($token)
             ->setRefreshToken(Arr::get($response, 'refresh_token'))
             ->setExpiresIn(Arr::get($response, 'expires_in'));
+    }
+
+    protected function getCode(): string
+    {
+        $code = $this->request->input('identifier');
+        if (empty($code)) {
+            throw new InvalidCodeException();
+        }
+
+        return $code;
     }
 
     protected function getTokenUrl(): string
@@ -213,7 +223,7 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
             return $value;
         }
 
-        $cache->put($key, $value = $callback(), \Hyperf\Support\value($ttl));
+        $cache->set($key, $value = $callback(), \Hyperf\Support\value($ttl));
 
         return $value;
     }
