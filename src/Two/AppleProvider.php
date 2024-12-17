@@ -7,13 +7,14 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Two;
+namespace Imee\HyperfSocialite\Two;
 
 use Hyperf\Collection\Arr;
 
 class AppleProvider extends AbstractProvider implements ProviderInterface
 {
     protected int $encodingType = PHP_QUERY_RFC3986;
+
     /**
      * The separating character for the requested scopes.
      */
@@ -26,6 +27,38 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
         'name',
         'email',
     ];
+
+    public function getAccessToken($code)
+    {
+        $response = $this->getHttpClient()
+            ->post(
+                $this->getTokenUrl(),
+                [
+                    'headers' => [
+                        'Authorization' => 'Basic ' . base64_encode(
+                            $this->clientId . ':' . $this->clientSecret
+                        ),
+                    ],
+                    'body' => $this->getTokenFields($code),
+                ]
+            );
+
+        return $this->parseAccessToken($response->getBody());
+    }
+
+    public function user(): User
+    {
+        $response = $this->getAccessTokenResponse($this->getCode());
+
+        $user = $this->mapUserToObject($this->getUserByToken(
+            Arr::get($response, 'id_token')
+        ));
+
+        return $user
+            ->setToken(Arr::get($response, 'id_token'))
+            ->setRefreshToken(Arr::get($response, 'refresh_token'))
+            ->setExpiresIn(Arr::get($response, 'expires_in'));
+    }
 
     protected function getAuthUrl(?string $state): string
     {
@@ -54,25 +87,7 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
 
     protected function getTokenUrl(): string
     {
-        return "https://appleid.apple.com/auth/token";
-    }
-
-    public function getAccessToken($code)
-    {
-        $response = $this->getHttpClient()
-            ->post(
-                $this->getTokenUrl(),
-                [
-                    'headers' => [
-                        'Authorization' => 'Basic '. base64_encode(
-                                $this->clientId . ':' . $this->clientSecret
-                            ),
-                    ],
-                    'body' => $this->getTokenFields($code),
-                ]
-            );
-
-        return $this->parseAccessToken($response->getBody());
+        return 'https://appleid.apple.com/auth/token';
     }
 
     protected function parseAccessToken($response)
@@ -85,7 +100,7 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
     protected function getTokenFields(string $code): array
     {
         $fields = parent::getTokenFields($code);
-        $fields["grant_type"] = "authorization_code";
+        $fields['grant_type'] = 'authorization_code';
 
         return $fields;
     }
@@ -97,42 +112,28 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
         return json_decode(base64_decode($claims), true);
     }
 
-    public function user(): User
-    {
-        $response = $this->getAccessTokenResponse($this->getCode());
-
-        $user = $this->mapUserToObject($this->getUserByToken(
-            Arr::get($response, 'id_token')
-        ));
-
-        return $user
-            ->setToken(Arr::get($response, 'id_token'))
-            ->setRefreshToken(Arr::get($response, 'refresh_token'))
-            ->setExpiresIn(Arr::get($response, 'expires_in'));
-    }
-
     protected function mapUserToObject(array $user): User
     {
         $value = $this->request->input('user');
         if ($value) {
             $userRequest = json_decode($value, true);
 
-            if (array_key_exists("name", $userRequest)) {
-                $user["name"] = $userRequest["name"];
+            if (array_key_exists('name', $userRequest)) {
+                $user['name'] = $userRequest['name'];
                 $fullName = trim(
-                    ($user["name"]['firstName'] ?? "")
-                    . " "
-                    . ($user["name"]['lastName'] ?? "")
+                    ($user['name']['firstName'] ?? '')
+                    . ' '
+                    . ($user['name']['lastName'] ?? '')
                 );
             }
         }
 
-        return (new User)
+        return (new User())
             ->setRaw($user)
             ->map([
-                "id" => $user["sub"],
-                "name" => $fullName ?? null,
-                "email" => $user["email"] ?? null,
+                'id' => $user['sub'],
+                'name' => $fullName ?? null,
+                'email' => $user['email'] ?? null,
             ]);
     }
 }

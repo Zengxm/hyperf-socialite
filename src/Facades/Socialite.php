@@ -7,10 +7,11 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Facades;
+namespace Imee\HyperfSocialite\Facades;
 
-use OnixSystemsPHP\HyperfSocialite\Contracts\Factory;
-use OnixSystemsPHP\HyperfSocialite\Contracts\Provider;
+use Imee\HyperfSocialite\Contracts\Factory;
+use Imee\HyperfSocialite\Contracts\Provider;
+use Imee\HyperfSocialite\SocialiteManager;
 
 use function Hyperf\Support\call;
 use function Hyperf\Support\make;
@@ -19,7 +20,7 @@ use function Hyperf\Support\make;
  * @method static Provider driver(string $driver = null)
  * @method static Provider with(string $driver = null)
  * @method static Provider buildProvider(string $provider, array $config)
- * @see \OnixSystemsPHP\HyperfSocialite\SocialiteManager
+ * @see SocialiteManager
  */
 class Socialite
 {

@@ -7,11 +7,11 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Tests;
+namespace Imee\HyperfSocialite\Tests;
 
-use OnixSystemsPHP\HyperfSocialite\Contracts\Factory;
-use OnixSystemsPHP\HyperfSocialite\SocialiteServiceProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\GithubProvider;
+use Imee\HyperfSocialite\Contracts\Factory;
+use Imee\HyperfSocialite\SocialiteServiceProvider;
+use Imee\HyperfSocialite\Two\GithubProvider;
 use Orchestra\Testbench\TestCase;
 
 /**

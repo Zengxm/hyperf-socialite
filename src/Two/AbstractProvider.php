@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Two;
+namespace Imee\HyperfSocialite\Two;
 
 use GuzzleHttp\Client;
 use Hyperf\Collection\Arr;
@@ -17,7 +17,7 @@ use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\HttpServer\Request;
 use Hyperf\Stringable\Str;
-use OnixSystemsPHP\HyperfSocialite\Contracts\Provider as ProviderContract;
+use Imee\HyperfSocialite\Contracts\Provider as ProviderContract;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 use function Hyperf\Support\make;

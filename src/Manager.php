@@ -7,12 +7,12 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite;
+namespace Imee\HyperfSocialite;
 
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\ContainerInterface;
 use Hyperf\Stringable\Str;
-use OnixSystemsPHP\HyperfSocialite\Contracts\Provider;
+use Imee\HyperfSocialite\Contracts\Provider;
 
 abstract class Manager
 {
@@ -63,7 +63,7 @@ abstract class Manager
      *
      * @throws \InvalidArgumentException
      */
-    public function driver(null|string $driver = null): Provider
+    public function driver(?string $driver = null): Provider
     {
         $driver = $driver ?: $this->getDefaultDriver();
 

@@ -7,13 +7,13 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Tests;
+namespace Imee\HyperfSocialite\Tests;
 
 use GuzzleHttp\Client;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Imee\HyperfSocialite\Two\LinkedInProvider;
+use Imee\HyperfSocialite\Two\User;
 use Mockery as m;
-use OnixSystemsPHP\HyperfSocialite\Two\LinkedInProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\User;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 

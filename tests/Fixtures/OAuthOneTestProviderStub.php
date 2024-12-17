@@ -7,8 +7,8 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Tests\Fixtures;
+namespace Imee\HyperfSocialite\Tests\Fixtures;
 
-use OnixSystemsPHP\HyperfSocialite\One\AbstractProvider;
+use Imee\HyperfSocialite\One\AbstractProvider;
 
 class OAuthOneTestProviderStub extends AbstractProvider {}

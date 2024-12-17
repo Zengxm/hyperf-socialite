@@ -7,14 +7,14 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Tests;
+namespace Imee\HyperfSocialite\Tests;
 
 use Mockery as m;
-use OnixSystemsPHP\HyperfSocialite\Tests\Fixtures\FacebookTestProviderStub;
-use OnixSystemsPHP\HyperfSocialite\Tests\Fixtures\OAuthTwoTestProviderStub;
-use OnixSystemsPHP\HyperfSocialite\Tests\Fixtures\OAuthTwoWithPKCETestProviderStub;
-use OnixSystemsPHP\HyperfSocialite\Two\InvalidStateException;
-use OnixSystemsPHP\HyperfSocialite\Two\User;
+use Imee\HyperfSocialite\Tests\Fixtures\FacebookTestProviderStub;
+use Imee\HyperfSocialite\Tests\Fixtures\OAuthTwoTestProviderStub;
+use Imee\HyperfSocialite\Tests\Fixtures\OAuthTwoWithPKCETestProviderStub;
+use Imee\HyperfSocialite\Two\InvalidStateException;
+use Imee\HyperfSocialite\Two\User;
 use PHPUnit\Framework\TestCase;
 
 /**

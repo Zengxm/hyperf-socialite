@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Two;
+namespace Imee\HyperfSocialite\Two;
 
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 

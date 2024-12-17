@@ -7,7 +7,9 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite;
+namespace Imee\HyperfSocialite;
+
+use Imee\HyperfSocialite\Contracts\Factory;
 
 class ConfigProvider
 {
@@ -15,7 +17,7 @@ class ConfigProvider
     {
         return [
             'dependencies' => [
-                \OnixSystemsPHP\HyperfSocialite\Contracts\Factory::class => \OnixSystemsPHP\HyperfSocialite\SocialiteManager::class,
+                Factory::class => SocialiteManager::class,
             ],
             'annotations' => [
                 'scan' => [

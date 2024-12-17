@@ -7,20 +7,20 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite;
+namespace Imee\HyperfSocialite;
 
 use Hyperf\Collection\Arr;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Stringable\Str;
 use League\OAuth1\Client\Server\Twitter as TwitterServer;
-use OnixSystemsPHP\HyperfSocialite\One\TwitterProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\AppleProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\BitbucketProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\FacebookProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\GithubProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\GitlabProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\GoogleProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\LinkedInProvider;
+use Imee\HyperfSocialite\One\TwitterProvider;
+use Imee\HyperfSocialite\Two\AppleProvider;
+use Imee\HyperfSocialite\Two\BitbucketProvider;
+use Imee\HyperfSocialite\Two\FacebookProvider;
+use Imee\HyperfSocialite\Two\GithubProvider;
+use Imee\HyperfSocialite\Two\GitlabProvider;
+use Imee\HyperfSocialite\Two\GoogleProvider;
+use Imee\HyperfSocialite\Two\LinkedInProvider;
 
 class SocialiteManager extends Manager implements Contracts\Factory
 {
@@ -110,7 +110,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Create an instance of the specified driver.
      */
-    protected function createAppleDriver(): Two\AppleProvider
+    protected function createAppleDriver(): AppleProvider
     {
         $config = $this->config->get('socialite.apple');
 

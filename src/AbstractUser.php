@@ -7,9 +7,9 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite;
+namespace Imee\HyperfSocialite;
 
-use OnixSystemsPHP\HyperfSocialite\Contracts\User;
+use Imee\HyperfSocialite\Contracts\User;
 
 abstract class AbstractUser implements \ArrayAccess, User
 {

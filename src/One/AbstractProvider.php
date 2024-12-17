@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\One;
+namespace Imee\HyperfSocialite\One;
 
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\SessionInterface;
@@ -15,7 +15,7 @@ use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use League\OAuth1\Client\Credentials\TokenCredentials;
 use League\OAuth1\Client\Server\Server;
-use OnixSystemsPHP\HyperfSocialite\Contracts\Provider as ProviderContract;
+use Imee\HyperfSocialite\Contracts\Provider as ProviderContract;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 use function Hyperf\Support\make;

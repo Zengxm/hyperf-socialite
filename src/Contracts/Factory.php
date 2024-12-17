@@ -7,14 +7,14 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Contracts;
+namespace Imee\HyperfSocialite\Contracts;
 
 interface Factory
 {
     /**
      * Get an OAuth provider implementation.
      */
-    public function driver(null|string $driver = null): Provider;
+    public function driver(?string $driver = null): Provider;
 
     /**
      * Make an OAuth provider implementation.

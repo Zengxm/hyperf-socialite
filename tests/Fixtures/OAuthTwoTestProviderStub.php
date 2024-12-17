@@ -7,20 +7,22 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Tests\Fixtures;
+namespace Imee\HyperfSocialite\Tests\Fixtures;
 
+use GuzzleHttp\Client;
+use Imee\HyperfSocialite\Two\AbstractProvider;
+use Imee\HyperfSocialite\Two\User;
 use Mockery as m;
-use OnixSystemsPHP\HyperfSocialite\Two\AbstractProvider;
-use OnixSystemsPHP\HyperfSocialite\Two\User;
+use Mockery\MockInterface;
 
 class OAuthTwoTestProviderStub extends AbstractProvider
 {
     /**
-     * @var \GuzzleHttp\Client|\Mockery\MockInterface
+     * @var Client|MockInterface
      */
     public $http;
 
-    protected function getAuthUrl(null|string $state): string
+    protected function getAuthUrl(?string $state): string
     {
         return $this->buildAuthUrlFromBase('http://auth.url', $state);
     }
@@ -43,9 +45,9 @@ class OAuthTwoTestProviderStub extends AbstractProvider
     /**
      * Get a fresh instance of the Guzzle HTTP client.
      *
-     * @return \GuzzleHttp\Client|\Mockery\MockInterface
+     * @return Client|MockInterface
      */
-    protected function getHttpClient(): \GuzzleHttp\Client
+    protected function getHttpClient(): Client
     {
         if ($this->http) {
             return $this->http;

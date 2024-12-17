@@ -7,15 +7,17 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Tests\Fixtures;
+namespace Imee\HyperfSocialite\Tests\Fixtures;
 
+use GuzzleHttp\Client;
 use Mockery as m;
-use OnixSystemsPHP\HyperfSocialite\Two\FacebookProvider;
+use Mockery\MockInterface;
+use Imee\HyperfSocialite\Two\FacebookProvider;
 
 class FacebookTestProviderStub extends FacebookProvider
 {
     /**
-     * @var \GuzzleHttp\Client|\Mockery\MockInterface
+     * @var Client|MockInterface
      */
     public $http;
 
@@ -27,9 +29,9 @@ class FacebookTestProviderStub extends FacebookProvider
     /**
      * Get a fresh instance of the Guzzle HTTP client.
      *
-     * @return \GuzzleHttp\Client|\Mockery\MockInterface
+     * @return Client|MockInterface
      */
-    protected function getHttpClient(): \GuzzleHttp\Client
+    protected function getHttpClient(): Client
     {
         if ($this->http) {
             return $this->http;

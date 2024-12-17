@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Tests\Fixtures;
+namespace Imee\HyperfSocialite\Tests\Fixtures;
 
 class OAuthTwoWithPKCETestProviderStub extends OAuthTwoTestProviderStub
 {

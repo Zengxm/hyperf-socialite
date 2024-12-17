@@ -7,6 +7,6 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\One;
+namespace Imee\HyperfSocialite\One;
 
 class MissingVerifierException extends \InvalidArgumentException {}

@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace OnixSystemsPHP\HyperfSocialite\Tests;
+namespace Imee\HyperfSocialite\Tests;
 
 use Hyperf\HttpServer\Request;
 use League\OAuth1\Client\Credentials\TemporaryCredentials;
@@ -15,10 +15,10 @@ use League\OAuth1\Client\Credentials\TokenCredentials;
 use League\OAuth1\Client\Server\Twitter;
 use League\OAuth1\Client\Server\User;
 use Mockery as m;
-use OnixSystemsPHP\HyperfSocialite\One\MissingTemporaryCredentialsException;
-use OnixSystemsPHP\HyperfSocialite\One\MissingVerifierException;
-use OnixSystemsPHP\HyperfSocialite\One\User as SocialiteUser;
-use OnixSystemsPHP\HyperfSocialite\Tests\Fixtures\OAuthOneTestProviderStub;
+use Imee\HyperfSocialite\One\MissingTemporaryCredentialsException;
+use Imee\HyperfSocialite\One\MissingVerifierException;
+use Imee\HyperfSocialite\One\User as SocialiteUser;
+use Imee\HyperfSocialite\Tests\Fixtures\OAuthOneTestProviderStub;
 use PHPUnit\Framework\TestCase;
 
 /**
