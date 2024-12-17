@@ -12,7 +12,6 @@ namespace Imee\HyperfSocialite;
 use Hyperf\Collection\Arr;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Stringable\Str;
-use League\OAuth1\Client\Server\Twitter as TwitterServer;
 use Imee\HyperfSocialite\One\TwitterProvider;
 use Imee\HyperfSocialite\Two\AppleProvider;
 use Imee\HyperfSocialite\Two\BitbucketProvider;
@@ -21,6 +20,7 @@ use Imee\HyperfSocialite\Two\GithubProvider;
 use Imee\HyperfSocialite\Two\GitlabProvider;
 use Imee\HyperfSocialite\Two\GoogleProvider;
 use Imee\HyperfSocialite\Two\LinkedInProvider;
+use League\OAuth1\Client\Server\Twitter as TwitterServer;
 
 class SocialiteManager extends Manager implements Contracts\Factory
 {

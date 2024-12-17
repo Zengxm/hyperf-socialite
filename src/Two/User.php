@@ -28,6 +28,15 @@ class User extends AbstractUser
      */
     public ?int $expiresIn;
 
+    public $accessTokenResponseBody;
+
+    public function setAccessTokenResponseBody(array $accessTokenResponseBody)
+    {
+        $this->accessTokenResponseBody = $accessTokenResponseBody;
+
+        return $this;
+    }
+
     /**
      * Set the token on the user.
      *

@@ -9,12 +9,12 @@ declare(strict_types=1);
 
 namespace Imee\HyperfSocialite\Tests;
 
-use Mockery as m;
 use Imee\HyperfSocialite\Tests\Fixtures\FacebookTestProviderStub;
 use Imee\HyperfSocialite\Tests\Fixtures\OAuthTwoTestProviderStub;
 use Imee\HyperfSocialite\Tests\Fixtures\OAuthTwoWithPKCETestProviderStub;
 use Imee\HyperfSocialite\Two\InvalidStateException;
 use Imee\HyperfSocialite\Two\User;
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
 /**

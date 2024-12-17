@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace Imee\HyperfSocialite\Tests\Fixtures;
 
 use GuzzleHttp\Client;
+use Imee\HyperfSocialite\Two\FacebookProvider;
 use Mockery as m;
 use Mockery\MockInterface;
-use Imee\HyperfSocialite\Two\FacebookProvider;
 
 class FacebookTestProviderStub extends FacebookProvider
 {
