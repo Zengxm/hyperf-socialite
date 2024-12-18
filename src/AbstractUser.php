@@ -113,7 +113,9 @@ abstract class AbstractUser implements \ArrayAccess, User
     public function map(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
-            $this->{$key} = $value;
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
         }
 
         return $this;
