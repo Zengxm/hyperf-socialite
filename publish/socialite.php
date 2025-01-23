@@ -40,4 +40,14 @@ return [
         'redirect' => env('SOCIAL_GITLAB_REDIRECT_URL', ''),
         'host' => env('SOCIAL_GITLAB_HOST', ''),
     ],
+    'tiktok' => [
+        'client_id' => env('SOCIAL_TIKTOK_CLIENT_ID'),
+        'client_secret' => env('SOCIAL_TIKTOK_CLIENT_SECRET'),
+        'redirect' => env('SOCIAL_TIKTOK_REDIRECT_URI'),
+    ],
+    'line' => [
+        'client_id' => env('SOCIAL_LINE_CLIENT_ID'),
+        'client_secret' => env('SOCIAL_LINE_CLIENT_SECRET'),
+        'redirect' => env('SOCIAL_LINE_REDIRECT_URI'),
+    ],
 ];

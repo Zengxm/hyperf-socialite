@@ -19,7 +19,9 @@ use Imee\HyperfSocialite\Two\FacebookProvider;
 use Imee\HyperfSocialite\Two\GithubProvider;
 use Imee\HyperfSocialite\Two\GitlabProvider;
 use Imee\HyperfSocialite\Two\GoogleProvider;
+use Imee\HyperfSocialite\Two\LineProvider;
 use Imee\HyperfSocialite\Two\LinkedInProvider;
+use Imee\HyperfSocialite\Two\TikTokProvider;
 use League\OAuth1\Client\Server\Twitter as TwitterServer;
 
 class SocialiteManager extends Manager implements Contracts\Factory
@@ -169,6 +171,32 @@ class SocialiteManager extends Manager implements Contracts\Factory
         return new TwitterProvider(
             $this->container->make('request'),
             new TwitterServer($this->formatConfig($config))
+        );
+    }
+
+    /**
+     * Create an instance of the specified driver.
+     */
+    protected function createTiktokDriver(): Two\AbstractProvider
+    {
+        $config = $this->config->get('socialite.tiktok');
+
+        return $this->buildProvider(
+            TikTokProvider::class,
+            $config
+        );
+    }
+
+    /**
+     * Create an instance of the specified driver.
+     */
+    protected function createLineDriver(): Two\AbstractProvider
+    {
+        $config = $this->config->get('socialite.line');
+
+        return $this->buildProvider(
+            LineProvider::class,
+            $config
         );
     }
 
