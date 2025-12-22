@@ -52,10 +52,10 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
         return $this->buildAuthUrlFromBase(self::URL . '/auth/authorize', $state);
     }
 
-    public function getAccessTokenResponse($code): array
+    public function getAccessTokenResponse(string $code): array
     {
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            RequestOptions::HEADERS => ['Authorization' => 'Basic ' . base64_encode($this->clientId . ':' . $this->getClientSecret())],
+            RequestOptions::HEADERS => ['Authorization' => 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret)],
             RequestOptions::FORM_PARAMS => $this->getTokenFields($code),
         ]);
 
@@ -139,56 +139,6 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
             ->setRefreshToken(Arr::get($response, 'refresh_token'))
             ->setExpiresIn(Arr::get($response, 'expires_in'));
     }
-
-    protected function getClientSecret()
-    {
-        if (! $this->jwtConfig) {
-            $this->getJwtConfig(); // Generate Client Secret from private key if not set.
-        }
-
-        return $this->clientSecret;
-    }
-
-    protected function getJwtConfig()
-    {
-        if (! $this->jwtConfig) {
-            $private_key_path = config('socialite.apple.private_key');
-            $private_key_passphrase = config('socialite.apple.passphrase');
-            $signer = config('socialite.apple.signer');
-
-            if (empty($signer) || ! class_exists($signer)) {
-                $signer = ! empty($private_key_path) ? \Lcobucci\JWT\Signer\Ecdsa\Sha256::class : AppleSignerNone::class;
-            }
-
-            if (! empty($private_key_path) && file_exists($private_key_path)) {
-                $this->privateKey = file_get_contents($private_key_path);
-            } else {
-                $this->privateKey = $private_key_path; // Support for plain text private keys
-            }
-
-            $this->jwtConfig = Configuration::forSymmetricSigner(
-                new $signer(),
-                AppleSignerInMemory::plainText($this->privateKey, $private_key_passphrase)
-            );
-
-            if (! empty($this->privateKey)) {
-                $appleToken = new AppleToken($this->getJwtConfig());
-                $this->clientSecret = $appleToken->generate();
-            }
-        }
-
-        return $this->jwtConfig;
-    }
-
-    //    public function getAccessTokenResponse(string $code): array
-    //    {
-    //        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-    //            RequestOptions::HEADERS => ['Authorization' => 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret)],
-    //            RequestOptions::FORM_PARAMS => $this->getTokenFields($code),
-    //        ]);
-    //
-    //        return json_decode((string) $response->getBody(), true);
-    //    }
 
     protected function getCode(): string
     {
