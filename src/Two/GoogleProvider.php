@@ -30,6 +30,61 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
         'email',
     ];
 
+    //    protected function getUserByToken(string $token): array
+    //    {
+    //        //        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/userinfo', [
+    //        //            'query' => [
+    //        //                'prettyPrint' => 'false',
+    //        //            ],
+    //        //            'headers' => [
+    //        //                'Accept' => 'application/json',
+    //        //                'Authorization' => 'Bearer ' . $token,
+    //        //            ],
+    //        //        ]);
+    //        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/tokeninfo', [
+    //            'query' => [
+    //                'prettyPrint' => 'false',
+    //                'id_token' => $token,
+    //            ],
+    //            'headers' => [
+    //                'Accept' => 'application/json',
+    //            ],
+    //        ]);
+    //
+    //        return json_decode((string) $response->getBody(), true);
+    //    }
+
+    public function isGoogleIdToken(string $token): bool
+    {
+        // 必须包含且仅包含两个点（即三段）
+        if (substr_count($token, '.') !== 2) {
+            return false;
+        }
+
+        // 长度过短的不可能是 JWT
+        if (strlen($token) < 100) {
+            return false;
+        }
+
+        // 尝试解码头部（可选，更严格）
+        [$headerB64, $payloadB64] = explode('.', $token, 3);
+
+        // Base64Url 解码头部
+        $headerJson = base64_decode(strtr($headerB64, '-_', '+/'), true);
+        if ($headerJson === false) {
+            return false;
+        }
+
+        $header = json_decode($headerJson, true);
+        if (! is_array($header) || ! isset($header['alg'])) {
+            return false;
+        }
+
+        // Google 的 ID Token 通常使用 RS256 算法
+        // 但也可以接受其他（如 ES256），这里不强制校验算法
+        return true;
+    }
+
     protected function getAuthUrl(?string $state): string
     {
         return $this->buildAuthUrlFromBase('https://accounts.google.com/o/oauth2/auth', $state);
@@ -40,48 +95,34 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
         return 'https://www.googleapis.com/oauth2/v4/token';
     }
 
-    protected function getUserByToken(string $token): array
+    protected function getUserByToken($token): array
     {
-        //        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/userinfo', [
-        //            'query' => [
-        //                'prettyPrint' => 'false',
-        //            ],
-        //            'headers' => [
-        //                'Accept' => 'application/json',
-        //                'Authorization' => 'Bearer ' . $token,
-        //            ],
-        //        ]);
-        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/tokeninfo', [
-            'query' => [
+        if ($this->isGoogleIdToken($token)) {
+            $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/tokeninfo', [
+                'query' => [
+                    'prettyPrint' => 'false',
+                    'id_token' => $token,
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ]);
+
+            return json_decode((string) $response->getBody(), true);
+        }
+
+        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/userinfo', [
+            RequestOptions::QUERY => [
                 'prettyPrint' => 'false',
-                'id_token' => $token,
             ],
-            'headers' => [
+            RequestOptions::HEADERS => [
                 'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $token,
             ],
         ]);
 
         return json_decode((string) $response->getBody(), true);
     }
-
-    //    protected function getUserByToken($token): array
-    //    {
-    //        if ($this->isJwtToken($token)) {
-    //            return $this->getUserFromJwtToken($token);
-    //        }
-    //
-    //        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/userinfo', [
-    //            RequestOptions::QUERY => [
-    //                'prettyPrint' => 'false',
-    //            ],
-    //            RequestOptions::HEADERS => [
-    //                'Accept' => 'application/json',
-    //                'Authorization' => 'Bearer ' . $token,
-    //            ],
-    //        ]);
-    //
-    //        return json_decode((string) $response->getBody(), true);
-    //    }
 
     protected function mapUserToObject(array $user): User
     {
