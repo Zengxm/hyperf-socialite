@@ -52,10 +52,10 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
         return $this->buildAuthUrlFromBase(self::URL . '/auth/authorize', $state);
     }
 
-    public function getAccessTokenResponse(string $code): array
+    public function getAccessTokenResponse($code): array
     {
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            RequestOptions::HEADERS => ['Authorization' => 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret)],
+            RequestOptions::HEADERS => $this->getTokenHeaders($code),
             RequestOptions::FORM_PARAMS => $this->getTokenFields($code),
         ]);
 
@@ -138,6 +138,21 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
         return $user->setToken($token)
             ->setRefreshToken(Arr::get($response, 'refresh_token'))
             ->setExpiresIn(Arr::get($response, 'expires_in'));
+    }
+
+    //    public function getAccessTokenResponse(string $code): array
+    //    {
+    //        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
+    //            RequestOptions::HEADERS => ['Authorization' => 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret)],
+    //            RequestOptions::FORM_PARAMS => $this->getTokenFields($code),
+    //        ]);
+    //
+    //        return json_decode((string) $response->getBody(), true);
+    //    }
+
+    protected function getTokenHeaders($code)
+    {
+        return ['Accept' => 'application/json'];
     }
 
     protected function getCode(): string
