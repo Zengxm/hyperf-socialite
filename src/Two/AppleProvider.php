@@ -144,6 +144,9 @@ class AppleProvider extends AbstractProvider implements ProviderInterface
     {
         $code = $this->request->input('identifier');
         if (empty($code)) {
+            $code = $this->request->input('code');
+        }
+        if (empty($code)) {
             throw new InvalidCodeException();
         }
 
