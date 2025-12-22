@@ -40,48 +40,48 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
         return 'https://www.googleapis.com/oauth2/v4/token';
     }
 
-    //    protected function getUserByToken(string $token): array
-    //    {
-    //        //        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/userinfo', [
-    //        //            'query' => [
-    //        //                'prettyPrint' => 'false',
-    //        //            ],
-    //        //            'headers' => [
-    //        //                'Accept' => 'application/json',
-    //        //                'Authorization' => 'Bearer ' . $token,
-    //        //            ],
-    //        //        ]);
-    //        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/tokeninfo', [
-    //            'query' => [
-    //                'prettyPrint' => 'false',
-    //                'id_token' => $token,
-    //            ],
-    //            'headers' => [
-    //                'Accept' => 'application/json',
-    //            ],
-    //        ]);
-    //
-    //        return json_decode((string) $response->getBody(), true);
-    //    }
-
-    protected function getUserByToken($token): array
+    protected function getUserByToken(string $token): array
     {
-        if ($this->isJwtToken($token)) {
-            return $this->getUserFromJwtToken($token);
-        }
-
-        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/userinfo', [
-            RequestOptions::QUERY => [
+        //        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/userinfo', [
+        //            'query' => [
+        //                'prettyPrint' => 'false',
+        //            ],
+        //            'headers' => [
+        //                'Accept' => 'application/json',
+        //                'Authorization' => 'Bearer ' . $token,
+        //            ],
+        //        ]);
+        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/tokeninfo', [
+            'query' => [
                 'prettyPrint' => 'false',
+                'id_token' => $token,
             ],
-            RequestOptions::HEADERS => [
+            'headers' => [
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . $token,
             ],
         ]);
 
         return json_decode((string) $response->getBody(), true);
     }
+
+    //    protected function getUserByToken($token): array
+    //    {
+    //        if ($this->isJwtToken($token)) {
+    //            return $this->getUserFromJwtToken($token);
+    //        }
+    //
+    //        $response = $this->getHttpClient()->get('https://www.googleapis.com/oauth2/v3/userinfo', [
+    //            RequestOptions::QUERY => [
+    //                'prettyPrint' => 'false',
+    //            ],
+    //            RequestOptions::HEADERS => [
+    //                'Accept' => 'application/json',
+    //                'Authorization' => 'Bearer ' . $token,
+    //            ],
+    //        ]);
+    //
+    //        return json_decode((string) $response->getBody(), true);
+    //    }
 
     protected function mapUserToObject(array $user): User
     {
