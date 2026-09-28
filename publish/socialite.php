@@ -50,4 +50,9 @@ return [
         'client_secret' => env('SOCIAL_LINE_CLIENT_SECRET'),
         'redirect' => env('SOCIAL_LINE_REDIRECT_URI'),
     ],
+    'snapchat' => [
+        'client_id' => env('SOCIAL_SNAPCHAT_CLIENT_ID'),
+        'client_secret' => env('SOCIAL_SNAPCHAT_CLIENT_SECRET'),
+        'redirect' => env('SOCIAL_SNAPCHAT_REDIRECT_URI'),
+    ],
 ];

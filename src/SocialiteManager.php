@@ -21,6 +21,7 @@ use Imee\HyperfSocialite\Two\GitlabProvider;
 use Imee\HyperfSocialite\Two\GoogleProvider;
 use Imee\HyperfSocialite\Two\LineProvider;
 use Imee\HyperfSocialite\Two\LinkedInProvider;
+use Imee\HyperfSocialite\Two\SnapchatProvider;
 use Imee\HyperfSocialite\Two\TikTokProvider;
 use League\OAuth1\Client\Server\Twitter as TwitterServer;
 
@@ -196,6 +197,19 @@ class SocialiteManager extends Manager implements Contracts\Factory
 
         return $this->buildProvider(
             LineProvider::class,
+            $config
+        );
+    }
+
+    /**
+     * Create an instance of the specified driver.
+     */
+    protected function createSnapchatDriver(): Two\AbstractProvider
+    {
+        $config = $this->config->get('socialite.snapchat');
+
+        return $this->buildProvider(
+            SnapchatProvider::class,
             $config
         );
     }
